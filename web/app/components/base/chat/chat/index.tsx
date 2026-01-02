@@ -37,6 +37,7 @@ import type { AppData } from '@/models/share'
 
 export type ChatProps = {
   appData?: AppData
+  appId?: string
   chatList: ChatItem[]
   config?: ChatConfig
   isResponding?: boolean
@@ -77,6 +78,7 @@ export type ChatProps = {
 
 const Chat: FC<ChatProps> = ({
   appData,
+  appId,
   config,
   onSend,
   inputs,
@@ -220,6 +222,7 @@ const Chat: FC<ChatProps> = ({
   return (
     <ChatContextProvider
       config={config}
+      appId={appId}
       chatList={chatList}
       isResponding={isResponding}
       showPromptLog={showPromptLog}
@@ -249,6 +252,7 @@ const Chat: FC<ChatProps> = ({
                   return (
                     <Answer
                       appData={appData}
+                      appId={appId}
                       key={item.id}
                       item={item}
                       question={chatList[index - 1]?.content}
@@ -268,7 +272,6 @@ const Chat: FC<ChatProps> = ({
                   <Question
                     key={item.id}
                     item={item}
-                    questionIcon={questionIcon}
                     theme={themeBuilder?.theme}
                     enableEdit={config?.questionEditEnable}
                     switchSibling={switchSibling}

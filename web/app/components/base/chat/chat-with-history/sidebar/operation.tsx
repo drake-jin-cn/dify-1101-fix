@@ -63,7 +63,7 @@ const Operation: FC<Props> = ({
                 : ActionButtonState.Default
           }
         >
-          <RiMoreFill className='h-4 w-4' />
+          <RiMoreFill className='h-4 w-4 text-white' />
         </ActionButton>
       </PortalToFollowElemTrigger>
       <PortalToFollowElemContent className="z-50">

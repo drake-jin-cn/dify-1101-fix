@@ -5,7 +5,6 @@ import Textarea from '@/app/components/base/textarea'
 import DatePicker from '@/app/components/base/date-and-time-picker/date-picker'
 import TimePicker from '@/app/components/base/date-and-time-picker/time-picker'
 import Checkbox from '@/app/components/base/checkbox'
-import Select from '@/app/components/base/select'
 import { useChatContext } from '@/app/components/base/chat/chat/context'
 import { formatDateForOutput } from '@/app/components/base/date-and-time-picker/utils/dayjs'
 
@@ -166,35 +165,42 @@ const MarkdownForm = ({ node }: any) => {
             )
           }
           if (child.properties.type === SUPPORTED_TYPES.SELECT) {
+            const options = (() => {
+              let opts = child.properties.dataOptions || child.properties['data-options'] || []
+              if (typeof opts === 'string') {
+                try {
+                  opts = JSON.parse(opts)
+                }
+                catch (e) {
+                  console.error('Failed to parse options:', e)
+                  opts = []
+                }
+              }
+              return opts
+            })()
+
             return (
-              <Select
-                key={index}
-                allowSearch={false}
-                className="w-full"
-                items={(() => {
-                  let options = child.properties.dataOptions || child.properties['data-options'] || []
-                  if (typeof options === 'string') {
-                    try {
-                      options = JSON.parse(options)
-                    }
-                    catch (e) {
-                      console.error('Failed to parse options:', e)
-                      options = []
-                    }
-                  }
-                  return options.map((option: string) => ({
-                    name: option,
-                    value: option,
-                  }))
-                })()}
-                defaultValue={formValues[child.properties.name]}
-                onSelect={(item) => {
-                  setFormValues(prevValues => ({
-                    ...prevValues,
-                    [child.properties.name]: item.value,
-                  }))
-                }}
-              />
+              <div key={index} className="flex flex-wrap gap-2">
+                {options.map((option: string) => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`system-sm-medium inline-flex cursor-pointer rounded-full border px-3.5 py-2 shadow-xs transition-colors ${
+                      formValues[child.properties.name] === option
+                        ? 'border-[1.5px] border-[#3B5DD9] bg-white text-[#3B5DD9]'
+                        : 'border-[0.5px] border-components-button-secondary-border bg-components-button-secondary-bg text-[#333333] hover:border-components-button-secondary-border-hover hover:bg-components-button-secondary-bg-hover'
+                    }`}
+                    onClick={() => {
+                      setFormValues(prevValues => ({
+                        ...prevValues,
+                        [child.properties.name]: option,
+                      }))
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
             )
           }
 

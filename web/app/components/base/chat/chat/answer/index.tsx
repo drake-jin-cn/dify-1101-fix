@@ -13,15 +13,16 @@ import AgentContent from './agent-content'
 import BasicContent from './basic-content'
 import SuggestedQuestions from './suggested-questions'
 import More from './more'
-import WorkflowProcessItem from './workflow-process'
 import LoadingAnim from '@/app/components/base/chat/chat/loading-anim'
 import Citation from '@/app/components/base/chat/chat/citation'
 import { EditTitle } from '@/app/components/app/annotation/edit-annotation-modal/edit-item'
 import type { AppData } from '@/models/share'
-import AnswerIcon from '@/app/components/base/answer-icon'
+import Image from 'next/image'
 import cn from '@/utils/classnames'
 import { FileList } from '@/app/components/base/file-uploader'
 import ContentSwitch from '../content-switch'
+import avatarIconImage from '@/app/assets/icons/avatar.png'
+import avatarPurchaseImage from '@/app/assets/icons/avatar-purchase.png'
 
 type AnswerProps = {
   item: ChatItem
@@ -36,6 +37,7 @@ type AnswerProps = {
   appData?: AppData
   noChatInput?: boolean
   switchSibling?: (siblingMessageId: string) => void
+  appId?: string
 }
 const Answer: FC<AnswerProps> = ({
   item,
@@ -50,6 +52,7 @@ const Answer: FC<AnswerProps> = ({
   appData,
   noChatInput,
   switchSibling,
+  appId,
 }) => {
   const { t } = useTranslation()
   const {
@@ -115,8 +118,8 @@ const Answer: FC<AnswerProps> = ({
 
   return (
     <div className='mb-2 flex last:mb-0'>
-      <div className='relative h-10 w-10 shrink-0'>
-        {answerIcon || <AnswerIcon />}
+      <div className='relative h-16 w-16 shrink-0'>
+        {<Image src={appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b' ? avatarIconImage.src : avatarPurchaseImage.src} alt="Avatar" width={64} height={64} className="h-16 w-16 rounded-full border border-[#E9EBF2] bg-white" />}
         {responding && (
           <div className='absolute left-[-3px] top-[-3px] flex h-4 w-4 items-center rounded-full border-[0.5px] border-divider-subtle bg-background-section-burn pl-[6px] shadow-xs'>
             <LoadingAnim type='avatar' />
@@ -128,23 +131,12 @@ const Answer: FC<AnswerProps> = ({
           <div
             ref={contentRef}
             className={cn('body-lg-regular relative inline-block max-w-full rounded-2xl bg-chat-bubble-bg px-4 py-3 text-text-primary', workflowProcess && 'w-full')}
+            style={{
+              boxShadow: '0px 1.76px 3.52px 0px #0000001A, 0px 0.88px 0.88px -0.44px #0000000D, 0px 0px 0.44px 0.44px #0000001A',
+            }}
           >
-            {
-              !responding && (
-                <Operation
-                  hasWorkflowProcess={!!workflowProcess}
-                  maxSize={containerWidth - contentWidth - 4}
-                  contentWidth={contentWidth}
-                  item={item}
-                  question={question}
-                  index={index}
-                  showPromptLog={showPromptLog}
-                  noChatInput={noChatInput}
-                />
-              )
-            }
-            {/** Render workflow process */}
-            {
+            {/** Render workflow process - Hidden per client request */}
+            {/* {
               workflowProcess && (
                 <WorkflowProcessItem
                   data={workflowProcess}
@@ -153,17 +145,15 @@ const Answer: FC<AnswerProps> = ({
                   readonly={hideProcessDetail && appData ? !appData.site.show_workflow_steps : undefined}
                 />
               )
-            }
+            } */}
             {
               responding && contentIsEmpty && !hasAgentThoughts && (
-                <div className='flex h-5 w-6 items-center justify-center'>
-                  <LoadingAnim type='text' />
-                </div>
+                <BasicContent item={item} responding={responding} />
               )
             }
             {
               !contentIsEmpty && !hasAgentThoughts && (
-                <BasicContent item={item} />
+                <BasicContent item={item} responding={responding} />
               )
             }
             {
@@ -219,6 +209,20 @@ const Answer: FC<AnswerProps> = ({
                   prevDisabled={!item.prevSibling}
                   nextDisabled={!item.nextSibling}
                   switchSibling={handleSwitchSibling}
+                />
+              )
+            }
+            {
+              !responding && (
+                <Operation
+                  hasWorkflowProcess={!!workflowProcess}
+                  maxSize={containerWidth - contentWidth - 4}
+                  contentWidth={contentWidth}
+                  item={item}
+                  question={question}
+                  index={index}
+                  showPromptLog={showPromptLog}
+                  noChatInput={noChatInput}
                 />
               )
             }

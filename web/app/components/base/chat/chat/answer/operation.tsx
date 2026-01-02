@@ -22,6 +22,7 @@ import ActionButton, { ActionButtonState } from '@/app/components/base/action-bu
 import NewAudioButton from '@/app/components/base/new-audio-button'
 import Modal from '@/app/components/base/modal/modal'
 import Textarea from '@/app/components/base/textarea'
+import FeedbackToast from '@/app/components/base/feedback-toast'
 import cn from '@/utils/classnames'
 
 type OperationProps = {
@@ -48,6 +49,7 @@ const Operation: FC<OperationProps> = ({
   const { t } = useTranslation()
   const {
     config,
+    appId,
     onAnnotationAdded,
     onAnnotationEdited,
     onAnnotationRemoved,
@@ -57,6 +59,7 @@ const Operation: FC<OperationProps> = ({
   const [isShowReplyModal, setIsShowReplyModal] = useState(false)
   const [isShowFeedbackModal, setIsShowFeedbackModal] = useState(false)
   const [feedbackContent, setFeedbackContent] = useState('')
+  const [showFeedbackToast, setShowFeedbackToast] = useState<'like' | 'dislike' | null>(null)
   const {
     id,
     isOpeningStatement,
@@ -89,6 +92,9 @@ const Operation: FC<OperationProps> = ({
     // Update admin feedback state separately if annotation is supported
     if (config?.supportAnnotation)
       setAdminLocalFeedback(rating ? { rating } : undefined)
+    // 显示反馈气泡
+    if (rating === 'like' || rating === 'dislike')
+      setShowFeedbackToast(rating)
   }
 
   const handleThumbsDown = () => {
@@ -106,137 +112,101 @@ const Operation: FC<OperationProps> = ({
     setIsShowFeedbackModal(false)
   }
 
-  const operationWidth = useMemo(() => {
-    let width = 0
-    if (!isOpeningStatement)
-      width += 26
-    if (!isOpeningStatement && showPromptLog)
-      width += 28 + 8
-    if (!isOpeningStatement && config?.text_to_speech?.enabled)
-      width += 26
-    if (!isOpeningStatement && config?.supportAnnotation && config?.annotation_reply?.enabled)
-      width += 26
-    if (config?.supportFeedback && !localFeedback?.rating && onFeedback && !isOpeningStatement)
-      width += 60 + 8
-    if (config?.supportFeedback && localFeedback?.rating && onFeedback && !isOpeningStatement)
-      width += 28 + 8
-    return width
-  }, [isOpeningStatement, showPromptLog, config?.text_to_speech?.enabled, config?.supportAnnotation, config?.annotation_reply?.enabled, config?.supportFeedback, localFeedback?.rating, onFeedback])
-
-  const positionRight = useMemo(() => operationWidth < maxSize, [operationWidth, maxSize])
-
   return (
     <>
+      {/* 分隔虚线 */}
+      {!isOpeningStatement && (
+        <div
+          className="my-2 h-[1px] w-full"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(to right, #E9EBF2 0, #E9EBF2 8px, transparent 8px, transparent 14px)',
+          }}
+        />
+      )}
+
       <div
         className={cn(
-          'absolute flex justify-end gap-1',
-          hasWorkflowProcess && '-bottom-4 right-2',
-          !positionRight && '-bottom-4 right-2',
-          !hasWorkflowProcess && positionRight && '!top-[9px]',
+          'flex items-center justify-between gap-3',
         )}
-        style={(!hasWorkflowProcess && positionRight) ? { left: contentWidth + 8 } : {}}
       >
-        {showPromptLog && !isOpeningStatement && (
-          <div className='hidden group-hover:block'>
-            <Log logItem={item} />
-          </div>
-        )}
+        {/* AI 提示文字 */}
         {!isOpeningStatement && (
-          <div className='ml-1 hidden items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm group-hover:flex'>
-            {(config?.text_to_speech?.enabled) && (
-              <NewAudioButton
-                id={id}
-                value={content}
-                voice={config?.text_to_speech?.voice}
-              />
-            )}
-            <ActionButton onClick={() => {
-              copy(content)
-              Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
-            }}>
-              <RiClipboardLine className='h-4 w-4' />
-            </ActionButton>
-            {!noChatInput && (
-              <ActionButton onClick={() => onRegenerate?.(item)}>
-                <RiResetLeftLine className='h-4 w-4' />
-              </ActionButton>
-            )}
-            {(config?.supportAnnotation && config.annotation_reply?.enabled) && (
-              <AnnotationCtrlButton
-                appId={config?.appId || ''}
-                messageId={id}
-                cached={!!annotation?.id}
-                query={question}
-                answer={content}
-                onAdded={(id, authorName) => onAnnotationAdded?.(id, authorName, question, content, index)}
-                onEdit={() => setIsShowReplyModal(true)}
-              />
-            )}
-          </div>
+          <span className="system-xs-regular flex-1 text-text-tertiary">
+            {appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b'
+              ? '以上内容从财务报销常见问题库中通过AI理解生成，仅供参考！'
+              : '以上内容从采购常见问题库中通过AI理解生成，仅供参考！'}
+          </span>
         )}
-        {!isOpeningStatement && config?.supportFeedback && !localFeedback?.rating && onFeedback && (
-          <div className='ml-1 hidden items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm group-hover:flex'>
-            {!localFeedback?.rating && (
-              <>
-                <ActionButton onClick={() => handleFeedback('like')}>
+
+        {/* 操作按钮区域 */}
+        <div className="flex items-center gap-1">
+          {showPromptLog && !isOpeningStatement && (
+            <div className='block'>
+              <Log logItem={item} />
+            </div>
+          )}
+          {!isOpeningStatement && (
+            <div className='ml-1 flex items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm'>
+              {(config?.text_to_speech?.enabled) && (
+                <NewAudioButton
+                  id={id}
+                  value={content}
+                  voice={config?.text_to_speech?.voice}
+                />
+              )}
+              <ActionButton onClick={() => {
+                copy(content)
+                Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
+              }}>
+                <RiClipboardLine className='h-4 w-4' />
+              </ActionButton>
+              {!noChatInput && (
+                <ActionButton onClick={() => onRegenerate?.(item)}>
+                  <RiResetLeftLine className='h-4 w-4' />
+                </ActionButton>
+              )}
+              {(config?.supportAnnotation && config.annotation_reply?.enabled) && (
+                <AnnotationCtrlButton
+                  appId={config?.appId || ''}
+                  messageId={id}
+                  cached={!!annotation?.id}
+                  query={question}
+                  answer={content}
+                  onAdded={(id, authorName) => onAnnotationAdded?.(id, authorName, question, content, index)}
+                  onEdit={() => setIsShowReplyModal(true)}
+                />
+              )}
+            </div>
+          )}
+          {!isOpeningStatement && config?.supportFeedback && !localFeedback?.rating && onFeedback && (
+            <div className='ml-1 flex items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm'>
+              {!localFeedback?.rating && (
+                <>
+                  <ActionButton onClick={() => handleFeedback('like')}>
+                    <RiThumbUpLine className='h-4 w-4' />
+                  </ActionButton>
+                  <ActionButton onClick={handleThumbsDown}>
+                    <RiThumbDownLine className='h-4 w-4' />
+                  </ActionButton>
+                </>
+              )}
+            </div>
+          )}
+          {!isOpeningStatement && config?.supportFeedback && localFeedback?.rating && onFeedback && (
+            <div className='ml-1 flex items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm'>
+              {localFeedback?.rating === 'like' && (
+                <ActionButton state={ActionButtonState.Active} onClick={() => handleFeedback(null)}>
                   <RiThumbUpLine className='h-4 w-4' />
                 </ActionButton>
-                <ActionButton onClick={handleThumbsDown}>
+              )}
+              {localFeedback?.rating === 'dislike' && (
+                <ActionButton state={ActionButtonState.Destructive} onClick={() => handleFeedback(null)}>
                   <RiThumbDownLine className='h-4 w-4' />
                 </ActionButton>
-              </>
-            )}
-          </div>
-        )}
-        {!isOpeningStatement && config?.supportFeedback && onFeedback && (
-          <div className='ml-1 flex items-center gap-0.5 rounded-[10px] border-[0.5px] border-components-actionbar-border bg-components-actionbar-bg p-0.5 shadow-md backdrop-blur-sm'>
-            {/* User Feedback Display */}
-            {userFeedback?.rating && (
-              <div className='flex items-center'>
-                <span className='mr-1 text-xs text-text-tertiary'>User</span>
-                {userFeedback.rating === 'like' ? (
-                  <ActionButton state={ActionButtonState.Active} title={userFeedback.content ? `User liked this response: ${userFeedback.content}` : 'User liked this response'}>
-                    <RiThumbUpLine className='h-3 w-3' />
-                  </ActionButton>
-                ) : (
-                  <ActionButton state={ActionButtonState.Destructive} title={userFeedback.content ? `User disliked this response: ${userFeedback.content}` : 'User disliked this response'}>
-                    <RiThumbDownLine className='h-3 w-3' />
-                  </ActionButton>
-                )}
-              </div>
-            )}
-
-            {/* Admin Feedback Controls */}
-            {config?.supportAnnotation && (
-              <div className='flex items-center'>
-                {userFeedback?.rating && <div className='mx-1 h-3 w-[0.5px] bg-components-actionbar-border' />}
-                {!adminLocalFeedback?.rating ? (
-                  <>
-                    <ActionButton onClick={() => handleFeedback('like')}>
-                      <RiThumbUpLine className='h-4 w-4' />
-                    </ActionButton>
-                    <ActionButton onClick={handleThumbsDown}>
-                      <RiThumbDownLine className='h-4 w-4' />
-                    </ActionButton>
-                  </>
-                ) : (
-                  <>
-                    {adminLocalFeedback.rating === 'like' ? (
-                      <ActionButton state={ActionButtonState.Active} onClick={() => handleFeedback(null)}>
-                        <RiThumbUpLine className='h-4 w-4' />
-                      </ActionButton>
-                    ) : (
-                      <ActionButton state={ActionButtonState.Destructive} onClick={() => handleFeedback(null)}>
-                        <RiThumbDownLine className='h-4 w-4' />
-                      </ActionButton>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
       <EditReplyModal
         isShow={isShowReplyModal}
@@ -276,6 +246,12 @@ const Operation: FC<OperationProps> = ({
             </div>
           </div>
         </Modal>
+      )}
+      {showFeedbackToast && (
+        <FeedbackToast
+          type={showFeedbackToast}
+          onClose={() => setShowFeedbackToast(null)}
+        />
       )}
     </>
   )

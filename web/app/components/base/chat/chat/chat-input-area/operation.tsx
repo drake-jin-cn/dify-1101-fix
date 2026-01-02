@@ -2,8 +2,8 @@ import type { FC, Ref } from 'react'
 import { memo } from 'react'
 import {
   RiMicLine,
-  RiSendPlane2Fill,
 } from '@remixicon/react'
+import Image from 'next/image'
 import type {
   EnableType,
 } from '../../types'
@@ -13,6 +13,7 @@ import ActionButton from '@/app/components/base/action-button'
 import { FileUploaderInChatInput } from '@/app/components/base/file-uploader'
 import type { FileUpload } from '@/app/components/base/features/types'
 import cn from '@/utils/classnames'
+import sendIconImage from '@/app/assets/icons/send.png'
 
 type OperationProps = {
   fileConfig?: FileUpload
@@ -54,18 +55,24 @@ const Operation: FC<OperationProps> = ({
           }
         </div>
         <Button
-          className='ml-3 w-8 px-0'
+          className='ml-3 mr-3'
           variant='primary'
           onClick={onSend}
-          style={
-            theme
-              ? {
-                backgroundColor: theme.primaryColor,
-              }
-              : {}
-          }
+          style={{
+            width: '80px',
+            height: '40px',
+            borderRadius: '40px',
+            background: 'linear-gradient(252.56deg, #001965 0.09%, #446CFA 99.91%)',
+            border: 'none',
+            padding: 0,
+          }}
         >
-          <RiSendPlane2Fill className='h-4 w-4' />
+          <Image
+            src={sendIconImage.src}
+            alt="Send"
+            width={20}
+            height={20}
+          />
         </Button>
       </div>
     </div>

@@ -1,26 +1,21 @@
 import { useCallback, useState } from 'react'
-import {
-  RiEditBoxLine,
-  RiLayoutRight2Line,
-  RiResetLeftLine,
-} from '@remixicon/react'
+import { RiAddLine, RiResetLeftLine } from '@remixicon/react'
 import { useTranslation } from 'react-i18next'
 import {
   useChatWithHistoryContext,
 } from '../context'
 import Operation from './operation'
 import ActionButton, { ActionButtonState } from '@/app/components/base/action-button'
-import AppIcon from '@/app/components/base/app-icon'
 import Tooltip from '@/app/components/base/tooltip'
 import ViewFormDropdown from '@/app/components/base/chat/chat-with-history/inputs-form/view-form-dropdown'
 import Confirm from '@/app/components/base/confirm'
 import RenameModal from '@/app/components/base/chat/chat-with-history/sidebar/rename-modal'
 import type { ConversationItem } from '@/models/share'
 import cn from '@/utils/classnames'
+import collapseIconImage from '@/app/assets/icons/collapse.png'
 
 const Header = () => {
   const {
-    appData,
     currentConversationId,
     currentConversationItem,
     inputsForms,
@@ -75,20 +70,12 @@ const Header = () => {
       <div className='flex h-14 shrink-0 items-center justify-between p-3'>
         <div className={cn('flex items-center gap-1 transition-all duration-200 ease-in-out', !isSidebarCollapsed && 'user-select-none opacity-0')}>
           <ActionButton className={cn(!isSidebarCollapsed && 'cursor-default')} size='l' onClick={() => handleSidebarCollapse(false)}>
-            <RiLayoutRight2Line className='h-[18px] w-[18px]' />
-          </ActionButton>
-          <div className='mr-1 shrink-0'>
-            <AppIcon
-              size='large'
-              iconType={appData?.site.icon_type}
-              icon={appData?.site.icon}
-              background={appData?.site.icon_background}
-              imageUrl={appData?.site.icon_url}
+            <img
+              src={collapseIconImage.src}
+              alt="Collapse"
+              className="h-[18px] w-[18px]"
             />
-          </div>
-          {!currentConversationId && (
-            <div className={cn('system-md-semibold grow truncate text-text-secondary')}>{appData?.site.title}</div>
-          )}
+          </ActionButton>
           {currentConversationId && currentConversationItem && isSidebarCollapsed && (
             <>
               <div className='p-1 text-divider-deep'>/</div>
@@ -104,7 +91,7 @@ const Header = () => {
             </>
           )}
           <div className='flex items-center px-1'>
-            <div className='h-[14px] w-px bg-divider-regular'></div>
+            <div className='mr-[6px] h-[14px] w-px bg-[#001965]'></div>
           </div>
           {isSidebarCollapsed && (
             <Tooltip
@@ -117,8 +104,22 @@ const Header = () => {
                   state={(!currentConversationId || isResponding) ? ActionButtonState.Disabled : ActionButtonState.Default}
                   disabled={!currentConversationId || isResponding}
                   onClick={handleNewConversation}
+                  style={{
+                    height: '32px',
+                    width: '120px',
+                    border: '1px solid #446CFA80',
+                    borderRadius: '30px',
+                    paddingTop: '6px',
+                    paddingRight: '12px',
+                    paddingBottom: '6px',
+                    paddingLeft: '12px',
+                    color: '#446CFA',
+                    fontSize: '12px',
+                    background: 'linear-gradient(0deg, rgba(68, 108, 250, 0.1), rgba(68, 108, 250, 0.1)), linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
+                  }}
                 >
-                  <RiEditBoxLine className='h-[18px] w-[18px]' />
+                  <RiAddLine className='h-[14px] w-[14px]' />
+                  {t('share.chat.newChat')}
                 </ActionButton>
               </div>
             </Tooltip>

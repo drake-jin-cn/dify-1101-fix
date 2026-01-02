@@ -181,7 +181,7 @@ const ChatInputArea = ({
     <>
       <div
         className={cn(
-          'relative z-10 overflow-hidden rounded-xl border border-components-chat-input-border bg-components-panel-bg-blur pb-[9px] shadow-md',
+          'relative z-10 overflow-hidden rounded-[30px] border border-components-chat-input-border bg-components-panel-bg-blur pb-[9px] shadow-md',
           isDragActive && 'border border-dashed border-components-option-card-option-selected-border',
           disabled && 'pointer-events-none border-components-panel-border opacity-50 shadow-none',
         )}
@@ -202,7 +202,7 @@ const ChatInputArea = ({
               <Textarea
                 ref={ref => textareaRef.current = ref as any}
                 className={cn(
-                  'body-lg-regular w-full resize-none bg-transparent p-1 leading-6 text-text-primary outline-none',
+                  'body-lg-regular w-full resize-none bg-transparent px-3 py-1 leading-6 text-text-primary outline-none',
                 )}
                 placeholder={decode(t('common.chat.inputPlaceholder', { botName }) || '')}
                 autoFocus

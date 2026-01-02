@@ -19,6 +19,7 @@ import Loading from '@/app/components/base/loading'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import cn from '@/utils/classnames'
 import useDocumentTitle from '@/hooks/use-document-title'
+import chatBgImage from '@/app/assets/images/chat-bg.png'
 
 type ChatWithHistoryProps = {
   className?: string
@@ -53,13 +54,13 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
 
   return (
     <div className={cn(
-      'flex h-full bg-background-default-burn',
+      'flex h-full [background:linear-gradient(180deg,#001965_63.59%,#00123D_100%)]',
       isMobile && 'flex-col',
       className,
     )}>
       {!isMobile && (
         <div className={cn(
-          'flex w-[236px] flex-col p-1 pr-0 transition-all duration-200 ease-in-out',
+          'flex w-[266px] flex-col p-1 pr-0 transition-all duration-200 ease-in-out',
           isSidebarCollapsed && 'w-0 overflow-hidden !p-0',
         )}>
           <Sidebar />
@@ -72,8 +73,8 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
         {isSidebarCollapsed && (
           <div
             className={cn(
-              'absolute top-0 z-20 flex h-full w-[256px] flex-col p-2 transition-all duration-500 ease-in-out',
-              showSidePanel ? 'left-0' : 'left-[-248px]',
+              'absolute top-0 z-20 flex h-full w-[286px] flex-col p-2 transition-all duration-500 ease-in-out',
+              showSidePanel ? 'left-0' : 'left-[-278px]',
             )}
             onMouseEnter={() => setShowSidePanel(true)}
             onMouseLeave={() => setShowSidePanel(false)}
@@ -81,7 +82,15 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
             <Sidebar isPanel panelVisible={showSidePanel} />
           </div>
         )}
-        <div className={cn('flex h-full flex-col overflow-hidden border-[0,5px] border-components-panel-border-subtle bg-chatbot-bg', isMobile ? 'rounded-t-2xl' : 'rounded-2xl')}>
+        <div
+          className={cn('flex h-full flex-col overflow-hidden border-[0,5px] border-components-panel-border-subtle', isMobile ? 'rounded-t-2xl' : 'rounded-2xl')}
+          style={{
+            backgroundImage: `url(${chatBgImage.src})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        >
           {!isMobile && <Header />}
           {appChatListDataLoading && (
             <Loading type='app' />

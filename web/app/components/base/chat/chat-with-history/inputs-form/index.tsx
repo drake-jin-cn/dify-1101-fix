@@ -6,6 +6,8 @@ import Divider from '@/app/components/base/divider'
 import InputsFormContent from '@/app/components/base/chat/chat-with-history/inputs-form/content'
 import { useChatWithHistoryContext } from '../context'
 import cn from '@/utils/classnames'
+import avatarPurchase from '@/app/assets/icons/avatar-purchase.png'
+import avatar from '@/app/assets/icons/avatar.png'
 
 type Props = {
   collapsed: boolean
@@ -24,6 +26,7 @@ const InputsFormNode = ({
     allInputsHidden,
     themeBuilder,
     inputsForms,
+    appId,
   } = useChatWithHistoryContext()
 
   if (allInputsHidden || inputsForms.length === 0)
@@ -31,45 +34,50 @@ const InputsFormNode = ({
 
   return (
     <div className={cn('flex flex-col items-center px-4 pt-6', isMobile && 'pt-4')}>
-      <div className={cn(
-        'w-full max-w-[672px] rounded-2xl border-[0.5px] border-components-panel-border bg-components-panel-bg shadow-md',
-        collapsed && 'border border-components-card-border bg-components-card-bg shadow-none',
-      )}>
+      <div className='ml-[-32px] flex w-full max-w-[672px] gap-3'>
+        <img src={appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b' ? avatar.src : avatarPurchase.src} alt="avatar" className="h-[64px] w-[64px] shrink-0 rounded-full border border-[#E9EBF2] bg-white" />
         <div className={cn(
-          'flex items-center gap-3 rounded-t-2xl px-6 py-4',
-          !collapsed && 'border-b border-divider-subtle',
-          isMobile && 'px-4 py-3',
+          'flex-1 rounded-2xl border-[0.5px] border-components-panel-border bg-components-panel-bg shadow-md',
+          collapsed && 'border border-components-card-border bg-components-card-bg shadow-none',
         )}>
-          <Message3Fill className='h-6 w-6 shrink-0' />
-          <div className='system-xl-semibold grow text-text-secondary'>{t('share.chat.chatSettingsTitle')}</div>
-          {collapsed && (
-            <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(false)}>{t('common.operation.edit')}</Button>
+          {(collapsed || currentConversationId) && (
+            <div className={cn(
+              'flex items-center gap-3 rounded-t-2xl px-6 py-4',
+              !collapsed && 'border-b border-divider-subtle',
+              isMobile && 'px-4 py-3',
+            )}>
+              <Message3Fill className='h-6 w-6 shrink-0' />
+              <div className='system-xl-semibold grow text-text-secondary'>{t('share.chat.chatSettingsTitle')}</div>
+              {collapsed && (
+                <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(false)}>{t('common.operation.edit')}</Button>
+              )}
+              {!collapsed && currentConversationId && (
+                <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(true)}>{t('common.operation.close')}</Button>
+              )}
+            </div>
           )}
-          {!collapsed && currentConversationId && (
-            <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(true)}>{t('common.operation.close')}</Button>
+          {!collapsed && (
+            <div className={cn('p-6', isMobile && 'p-4')}>
+              <InputsFormContent />
+            </div>
+          )}
+          {!collapsed && !currentConversationId && (
+            <div className={cn('p-6', isMobile && 'p-4')}>
+              <Button
+                variant='primary'
+                className='w-full'
+                onClick={() => handleStartChat(() => setCollapsed(true))}
+                style={
+                  themeBuilder?.theme
+                    ? {
+                      backgroundColor: themeBuilder?.theme.primaryColor,
+                    }
+                    : {}
+                }
+              >{t('share.chat.startChat')}</Button>
+            </div>
           )}
         </div>
-        {!collapsed && (
-          <div className={cn('p-6', isMobile && 'p-4')}>
-            <InputsFormContent />
-          </div>
-        )}
-        {!collapsed && !currentConversationId && (
-          <div className={cn('p-6', isMobile && 'p-4')}>
-            <Button
-              variant='primary'
-              className='w-full'
-              onClick={() => handleStartChat(() => setCollapsed(true))}
-              style={
-                themeBuilder?.theme
-                  ? {
-                    backgroundColor: themeBuilder?.theme.primaryColor,
-                  }
-                  : {}
-              }
-            >{t('share.chat.startChat')}</Button>
-          </div>
-        )}
       </div>
       {collapsed && (
         <div className='flex w-full max-w-[720px] items-center py-4'>

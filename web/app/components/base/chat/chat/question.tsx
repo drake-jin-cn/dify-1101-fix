@@ -1,6 +1,5 @@
 import type {
   FC,
-  ReactNode,
 } from 'react'
 import {
   memo,
@@ -13,7 +12,6 @@ import type { ChatItem } from '../types'
 import type { Theme } from '../embedded-chatbot/theme/theme-context'
 import { CssTransform } from '../embedded-chatbot/theme/utils'
 import ContentSwitch from './content-switch'
-import { User } from '@/app/components/base/icons/src/public/avatar'
 import { Markdown } from '@/app/components/base/markdown'
 import { FileList } from '@/app/components/base/file-uploader'
 import ActionButton from '../../action-button'
@@ -28,7 +26,6 @@ import { useChatContext } from './context'
 
 type QuestionProps = {
   item: ChatItem
-  questionIcon?: ReactNode
   theme: Theme | null | undefined
   enableEdit?: boolean
   switchSibling?: (siblingMessageId: string) => void
@@ -36,7 +33,6 @@ type QuestionProps = {
 
 const Question: FC<QuestionProps> = ({
   item,
-  questionIcon,
   theme,
   enableEdit = true,
   switchSibling,
@@ -121,8 +117,12 @@ const Question: FC<QuestionProps> = ({
         </div>
         <div
           ref={contentRef}
-          className='w-full rounded-2xl bg-background-gradient-bg-fill-chat-bubble-bg-3 px-4 py-3 text-sm text-text-primary'
-          style={theme?.chatBubbleColorStyle ? CssTransform(theme.chatBubbleColorStyle) : {}}
+          className='w-full rounded-2xl px-4 py-3 text-sm'
+          style={{
+            background: 'linear-gradient(0deg, rgba(68, 108, 250, 0.1), rgba(68, 108, 250, 0.1)), linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
+            border: '1px solid #446CFA80',
+            ...(theme?.chatBubbleColorStyle ? CssTransform(theme.chatBubbleColorStyle) : {}),
+          }}
         >
           {
             !!message_files?.length && (
@@ -135,7 +135,15 @@ const Question: FC<QuestionProps> = ({
             )
           }
           {!isEditing
-            ? <Markdown content={content} />
+            ? <div style={{
+              color: 'transparent !important',
+              backgroundImage: 'linear-gradient(90deg, #446CFA 0%, #001965 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              <Markdown content={content} className="[&_*]:!text-transparent" />
+            </div>
             : <div className="
                 flex flex-col gap-2 rounded-xl
                 border border-components-chat-input-border bg-components-panel-bg-blur p-[9px] shadow-md
@@ -165,15 +173,6 @@ const Question: FC<QuestionProps> = ({
           />}
         </div>
         <div className='mt-1 h-[18px]' />
-      </div>
-      <div className='h-10 w-10 shrink-0'>
-        {
-          questionIcon || (
-            <div className='h-full w-full rounded-full border-[0.5px] border-black/5'>
-              <User className='h-full w-full' />
-            </div>
-          )
-        }
       </div>
     </div>
   )

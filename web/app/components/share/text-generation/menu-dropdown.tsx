@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Placement } from '@floating-ui/react'
 import {
-  RiEqualizer2Line,
+  RiSettingsLine,
 } from '@remixicon/react'
 import { usePathname, useRouter } from 'next/navigation'
 import Divider from '../../base/divider'
@@ -77,7 +77,7 @@ const MenuDropdown: FC<Props> = ({
         <PortalToFollowElemTrigger onClick={handleTrigger}>
           <div>
             <ActionButton size='l' className={cn(open && 'bg-state-base-hover')}>
-              <RiEqualizer2Line className='h-[18px] w-[18px]' />
+              <RiSettingsLine className='h-[20px] w-[20px] text-white' />
             </ActionButton>
           </div>
         </PortalToFollowElemTrigger>
