@@ -132,7 +132,7 @@ const Operation: FC<OperationProps> = ({
         {/* AI 提示文字 */}
         {!isOpeningStatement && (
           <span className="system-xs-regular flex-1 text-text-tertiary">
-            {appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b'
+            {appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3'
               ? '以上内容从财务报销常见问题库中通过AI理解生成，仅供参考！'
               : '以上内容从采购常见问题库中通过AI理解生成，仅供参考！'}
           </span>

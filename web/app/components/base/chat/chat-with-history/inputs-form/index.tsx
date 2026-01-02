@@ -35,7 +35,7 @@ const InputsFormNode = ({
   return (
     <div className={cn('flex flex-col items-center px-4 pt-6', isMobile && 'pt-4')}>
       <div className='ml-[-32px] flex w-full max-w-[672px] gap-3'>
-        <img src={appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b' ? avatar.src : avatarPurchase.src} alt="avatar" className="h-[64px] w-[64px] shrink-0 rounded-full border border-[#E9EBF2] bg-white" />
+        <img src={appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? avatar.src : avatarPurchase.src} alt="avatar" className="h-[64px] w-[64px] shrink-0 rounded-full border border-[#E9EBF2] bg-white" />
         <div className={cn(
           'flex-1 rounded-2xl border-[0.5px] border-components-panel-border bg-components-panel-bg shadow-md',
           collapsed && 'border border-components-card-border bg-components-card-bg shadow-none',

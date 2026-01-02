@@ -155,7 +155,7 @@ const Sidebar = ({ isPanel, panelVisible }: Props) => {
       </div>
       <div className='flex shrink-0 items-center justify-between p-3'>
         <img
-          src={appId === '0bc1787e-171a-4e1e-8dcb-ef9caf9cdf7b' ? avatarIconImage.src : avatarPurchaseImage.src}
+          src={appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? avatarIconImage.src : avatarPurchaseImage.src}
           alt="Avatar"
           className="h-[48px] w-[48px] rounded-full border border-[#E9EBF2] bg-white"
         />

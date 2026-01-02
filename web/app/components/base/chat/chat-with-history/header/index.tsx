@@ -106,7 +106,7 @@ const Header = () => {
                   onClick={handleNewConversation}
                   style={{
                     height: '32px',
-                    width: '120px',
+                    width: '140px',
                     border: '1px solid #446CFA80',
                     borderRadius: '30px',
                     paddingTop: '6px',

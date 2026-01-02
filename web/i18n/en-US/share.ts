@@ -5,7 +5,7 @@ const translation = {
     appUnknownError: 'App is unavailable',
   },
   chat: {
-    newChat: 'Start New chat',
+    newChat: 'Start New Chat',
     newChatTip: 'Already in a new chat',
     chatSettingsTitle: 'New chat setup',
     chatFormTip: 'Chat settings cannot be modified after the chat has started.',
