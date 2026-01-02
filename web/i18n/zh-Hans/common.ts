@@ -728,9 +728,9 @@ const translation = {
     imageUpload: '图片上传',
   },
   fileUploader: {
-    uploadFromComputer: '从本地上传',
+    uploadFromComputer: '上传文件',
     pasteFileLink: '粘贴文件链接',
-    pasteFileLinkInputPlaceholder: '输入文件链接',
+    pasteFileLinkInputPlaceholder: '请在此处粘贴链接',
     uploadFromComputerReadError: '文件读取失败，请重新选择。',
     uploadFromComputerUploadError: '文件上传失败，请重新上传。',
     uploadFromComputerLimit: '上传 {{type}} 不能超过 {{size}}',
