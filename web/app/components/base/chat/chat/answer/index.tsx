@@ -119,7 +119,7 @@ const Answer: FC<AnswerProps> = ({
   return (
     <div className='mb-2 flex last:mb-0'>
       <div className='relative h-16 w-16 shrink-0'>
-        {<Image src={appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? avatarIconImage.src : avatarPurchaseImage.src} alt="Avatar" width={64} height={64} className="h-16 w-16 rounded-full border border-[#E9EBF2] bg-white" />}
+        {<Image src={appId === '0e227844-dd40-465b-bb2c-3aee24e0bba3' ? avatarIconImage.src : avatarPurchaseImage.src} alt="Avatar" width={64} height={64} className="h-16 w-16 rounded-full border border-[#E9EBF2] bg-white" />}
         {responding && (
           <div className='absolute left-[-3px] top-[-3px] flex h-4 w-4 items-center rounded-full border-[0.5px] border-divider-subtle bg-background-section-burn pl-[6px] shadow-xs'>
             <LoadingAnim type='avatar' />

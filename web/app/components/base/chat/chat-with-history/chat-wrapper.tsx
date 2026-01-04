@@ -230,7 +230,7 @@ const ChatWrapper = () => {
     if (welcomeMessage.suggestedQuestions && welcomeMessage.suggestedQuestions?.length > 0) {
       return (
         <div className='flex min-h-[50vh] flex-col items-center justify-center px-4 py-12'>
-          {appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? (
+          {appId === '0e227844-dd40-465b-bb2c-3aee24e0bba3' ? (
             <>
               {/* 头像和欢迎消息区域 - 默认布局：消息在左，头像在右 */}
               <div className='relative mb-[-80px] flex w-full max-w-[900px] items-center justify-end gap-6'>
@@ -299,7 +299,7 @@ const ChatWrapper = () => {
               <div className='flex items-center justify-between'>
                 {/* 左侧快捷按钮 */}
                 <div className='flex items-center gap-2'>
-                  {(appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? [
+                  {(appId === '0e227844-dd40-465b-bb2c-3aee24e0bba3' ? [
                     { icon: tip1Icon, text: '差旅费用' },
                     { icon: tip2Icon, text: '学术拜访' },
                     { icon: tip3Icon, text: '培训会议' },
@@ -363,7 +363,7 @@ const ChatWrapper = () => {
           {/* 建议问题 */}
           <div className='flex w-full max-w-[768px] flex-wrap justify-center gap-3 px-4'>
             {welcomeMessage.suggestedQuestions.filter(q => !!q && q.trim()).map((question, index) => {
-              const questionIcons = appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3'
+              const questionIcons = appId === '0e227844-dd40-465b-bb2c-3aee24e0bba3'
                 ? [question1Icon, question2Icon, question3Icon, question4Icon]
                 : [q1Icon, q2Icon, q3Icon]
               const icon = questionIcons[index]
@@ -392,7 +392,7 @@ const ChatWrapper = () => {
     return (
       <div className={cn('flex h-[50vh] flex-col items-center justify-center gap-3 py-12')}>
         <img
-          src={appId === 'a315e21d-08de-4cfb-85e7-238fb50683e3' ? avatarIconImage.src : avatarPurchaseImage.src}
+          src={appId === '0e227844-dd40-465b-bb2c-3aee24e0bba3' ? avatarIconImage.src : avatarPurchaseImage.src}
           alt="Avatar"
           className="h-[64px] w-[64px] rounded-full border border-[#E9EBF2] bg-white"
         />
